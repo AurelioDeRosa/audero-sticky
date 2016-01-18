@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>Audero Sticky Demo</title>
+      <style>
+         *
+         {
+            box-sizing: border-box;
+         }
+
+         body
+         {
+            margin: 0 auto;
+            max-width: 600px;
+         }
+
+         .header
+         {
+            height: 100px;
+            background-color: #DDCBAF;
+            text-align: center;
+         }
+
+         .header h1
+         {
+            margin-top: 0;
+            padding-top: 20px;
+         }
+
+         .menu
+         {
+            margin: 0 0 10px 0;
+            padding: 0;
+            width: 100%;
+            background-color: #BFFFF3;
+         }
+
+         .menu:after
+         {
+            content: "";
+            display: table;
+            clear: both;
+         }
+
+         .menu li
+         {
+            display: inline-block;
+            float: left;
+            text-align: center;
+            width: 25%;
+         }
+
+         .menu li:hover,
+         .menu li:focus
+         {
+            background-color: #66FFE3;
+         }
+
+         .menu a
+         {
+            display: block;
+            padding: 10px 0;
+            text-decoration: none;
+         }
+
+         .sticky
+         {
+            position: sticky;
+            bottom: 0;
+         }
+
+         .container
+         {
+            padding: 0 20px;
+         }
+
+         .author
+         {
+            padding: 0 20px;
+            text-align: center;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header">
+         <h1>Audero Sticky</h1>
+      </div>
+
+      <div class="container">
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <h2>Header 1</h2>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <h2>Header 2</h2>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <h2>Header 3</h2>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <h2>Header 4</h2>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+         <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent luctus urna sit amet sollicitudin
+            venenatis. Aenean odio tortor, varius vitae molestie eu, ultricies vel lacus. Nam viverra fermentum
+            dapibus. Nulla at semper diam. Phasellus sit amet hendrerit sapien, non semper felis. Morbi augue leo,
+            mattis nec leo sed, malesuada porta dui. Maecenas pretium eros quis lorem luctus gravida.
+         </p>
+      </div>
+
+      <ul class="menu sticky">
+         <li><a href="#">Home</a></li>
+         <li><a href="#">Services</a></li>
+         <li><a href="#">Portfolio</a></li>
+         <li><a href="#">About</a></li>
+      </ul>
+
+      <div class="author">
+         <a href="https://github.com/AurelioDeRosa/audero-sticky">Audero Sticky</a> has been created by
+         <a href="http://www.audero.it">Aurelio De Rosa</a>
+         (<a href="https://twitter.com/AurelioDeRosa">@AurelioDeRosa</a>).
+      </div>
+
+      <script src="../src/audero-sticky.js"></script>
+      <script>
+         if (!Sticky.isFeatureSupported()) {
+            var stickyMenu = new Sticky(document.querySelector('.sticky'));
+
+            stickyMenu.init();
+         }
+      </script>
+   </body>
+</html>

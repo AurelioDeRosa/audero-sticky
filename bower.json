@@ -1,0 +1,30 @@
+{
+   "name": "audero-sticky",
+   "version": "0.1.0",
+   "description": "Audero Sticky is a polyfill for the CSS position: sticky with no dependencies and support for multiple module systems.",
+   "main": "src/audero-sticky.js",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/AurelioDeRosa/audero-sticky.git"
+   },
+   "keywords": [
+      "sticky",
+      "position",
+      "position-sticky",
+      "polyfill",
+      "css",
+      "javascript",
+      "library",
+      "umd"
+   ],
+   "author": [
+      "Aurelio De Rosa <a.derosa@audero.it> (http://audero.it)"
+   ],
+   "license": "(MIT OR GPL-3.0)",
+   "homepage": "https://github.com/AurelioDeRosa/audero-sticky",
+   "moduleType": [
+      "amd",
+      "globals",
+      "node"
+   ]
+}

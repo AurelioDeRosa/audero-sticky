@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>Audero Sticky Demo</title>
+      <style>
+         *
+         {
+            box-sizing: border-box;
+         }
+
+         body
+         {
+            margin: 0 auto;
+            max-width: 600px;
+         }
+
+         .movies
+         {
+            margin-bottom: 10px;
+         }
+
+         dl
+         {
+            margin: 24px 0 0 0;
+            padding: 0;
+         }
+
+         dt,
+         dd
+         {
+            margin: 0;
+            padding: 5px;
+         }
+
+         dt
+         {
+            background: #BBBBBB;
+            border: 1px solid #000000;
+            color: #FFFFFF;
+         }
+
+         .sticky
+         {
+            position: sticky;
+            top: 10px;
+         }
+
+         dd + dd
+         {
+            border-top: 1px solid #CCCCCC
+         }
+
+         .author
+         {
+            padding: 0 20px;
+            text-align: center;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header">
+         <h1>Audero Sticky</h1>
+      </div>
+
+      <h2>Movies</h2>
+
+      <div class="movies">
+         <dl>
+            <dt class="sticky">A</dt>
+            <dd>The A-Team</dd>
+            <dd>A.C.O.D.</dd>
+            <dd>A.I. Artificial Intelligence</dd>
+            <dd>Aaja Nachle</dd>
+            <dd>Aarakshan (Reservation)</dd>
+            <dd>Aashayein (Wishes)</dd>
+            <dd>Aatsinki: The Story of Arctic Cowboys</dd>
+            <dd>Abandon</dd>
+            <dd>The Abandoned</dd>
+            <dd>ABC Africa</dd>
+            <dd>The ABC's of Death</dd>
+            <dd>ABCD</dd>
+         </dl>
+         <dl>
+            <dt class="sticky">B</dt>
+            <dd>B-Side</dd>
+            <dd>B. Monkey</dd>
+            <dd>B.A.P.S.</dd>
+            <dd>B.F.'s Daughter</dd>
+            <dd>B.O.O.: Bureau of Otherworldly Operations</dd>
+            <dd>Baadasssss!</dd>
+            <dd>The Baader Meinhof Complex</dd>
+            <dd>Baadshah</dd>
+            <dd>Baahubali: The Beginning</dd>
+            <dd>Bab'Aziz - The Prince Who Contemplated His Soul</dd>
+            <dd>The Babadook</dd>
+         </dl>
+         <dl>
+            <dt class="sticky">C</dt>
+            <dd>C Me Dance</dd>
+            <dd>C'est La Vie</dd>
+            <dd>C'Est Si Bon</dd>
+            <dd>C.H.U.D.</dd>
+            <dd>C.O.G.</dd>
+            <dd>Ca$h</dd>
+            <dd>Cabeza De Vaca</dd>
+            <dd>Cabin Boy</dd>
+            <dd>Cabin Fever</dd>
+            <dd>The Cabin in the Woods</dd>
+         </dl>
+         <dl>
+            <dt class="sticky">D</dt>
+            <dd>The D Train</dd>
+            <dd>D'Lucky Ones</dd>
+            <dd>D-Day</dd>
+            <dd>D.A.R.Y.L.</dd>
+            <dd>D.C. Cab</dd>
+            <dd>D.E.B.S.</dd>
+            <dd>D.O.A.</dd>
+            <dd>D2: The Mighty Ducks</dd>
+         </dl>
+         <dl>
+            <dt class="sticky">E</dt>
+            <dd>E.T.: The Extra-Terrestrial</dd>
+            <dd>The Eagle</dd>
+            <dd>Eagle Eye</dd>
+            <dd>Eagle Vs. Shark</dd>
+            <dd>Eames: The Architect and the Painter</dd>
+            <dd>Earth</dd>
+            <dd>Earth Days</dd>
+            <dd>Earth Girls Are Easy</dd>
+            <dd>Earth to Echo</dd>
+            <dd>The Earth Will Swallow You</dd>
+            <dd>Earthquake</dd>
+            <dd>The East</dd>
+            <dd>East is East</dd>
+            <dd>East of Eden</dd>
+            <dd>East of Havana</dd>
+         </dl>
+      </div>
+
+      <div class="author">
+         <a href="https://github.com/AurelioDeRosa/audero-sticky">Audero Sticky</a> has been created by
+         <a href="http://www.audero.it">Aurelio De Rosa</a>
+         (<a href="https://twitter.com/AurelioDeRosa">@AurelioDeRosa</a>).
+      </div>
+
+      <script src="../src/audero-sticky.js"></script>
+      <script>
+         if (!Sticky.isFeatureSupported()) {
+            Sticky.autoInit();
+         }
+      </script>
+   </body>
+</html>

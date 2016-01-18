@@ -1,0 +1,381 @@
+(function(root, factory) {
+   'use strict';
+
+   if (typeof define === 'function' && define.amd) {
+      define(factory);
+   } else if (typeof module === 'object' && module.exports) {
+      module.exports = factory();
+   } else {
+      root.Sticky = factory();
+   }
+}(this, function() {
+   'use strict';
+
+   /**
+    * @typedef SettingsHash
+    * @type {Object}
+    * @property {string} [selector='.sticky'] The selector used to identify the
+    * elements processed by this library
+    */
+
+   /**
+    * The default values for settings available
+    *
+    * @type {SettingsHash}
+    */
+   var defaults = {
+      selector: '.sticky'
+   };
+
+   /**
+    * The properties needed by the placeholder element to have the
+    * occupy the same space as the element when in its original position
+    *
+    * @type {string[]}
+    */
+   var properties = [
+      'width',
+      'height',
+      'left',
+      'marginLeft',
+      'marginRight',
+      'zIndex'
+   ];
+
+   /**
+    * Triggers an event on an element
+    *
+    * @param {HTMLElement} element The element on which the event is triggered
+    * @param {string} event The name of the event to trigger
+    * @param {Object} [eventProperties] A hash of property-value pairs  to customize the event
+    */
+   function triggerEvent(element, event, eventProperties) {
+      var customEvent = document.createEvent('Event');
+
+      customEvent.initEvent(event, true, true);
+
+      for(var property in eventProperties) {
+         if (eventProperties.hasOwnProperty(property)) {
+            customEvent[property] = eventProperties[property];
+         }
+      }
+
+      element.dispatchEvent(customEvent);
+   }
+
+   /**
+    * Resets the style of the properties specifies
+    *
+    * @param {CSSStyleDeclaration} style The object whose properties values are reset
+    * @param {string[]} properties The properties to reset
+    */
+   function resetStyleProperties(style, properties) {
+      properties.forEach(function(property) {
+         style[property] = '';
+      });
+   }
+
+   /**
+    * Copies the properties' values of a CSSStyleDeclaration object into another.
+    * If an array of properties is specified, only those properties' values are copied
+    *
+    * @param {CSSStyleDeclaration} style The object in which to copy the values
+    * @param {CSSStyleDeclaration} blueprintStyle The object whose values are copied
+    * @param {string[]} [properties] The properties to copy
+    */
+   function copyStyleProperties(style, blueprintStyle, properties) {
+      if (!properties) {
+         properties = Object.keys(blueprintStyle);
+      }
+
+      properties.forEach(function(property) {
+         style[property] = blueprintStyle[property];
+      });
+   }
+
+   /**
+    * Calculates the z-index value of an element based
+    * on its position in the DOM, among other elements selected
+    * by the CSS selector provided
+    *
+    * @param {HTMLElement} element The element whose z-index value must be calculated
+    * @param {string} selector The CSS selector to use
+    *
+    * @return {number}
+    */
+   function getZIndex(element, selector) {
+      var stickyElements = [].slice.call(document.querySelectorAll(selector));
+
+      return stickyElements.indexOf(element) + 1;
+   }
+
+   /**
+    * Turns the unitless values of the object provided in pixels
+    *
+    * @param {Object} propertiesHash The object whose values will be converted
+    *
+    * @return {Object}
+    */
+   function convertNumbersToPixels(propertiesHash) {
+      var object = {};
+
+      for(var property in propertiesHash) {
+         object[property] = propertiesHash[property] + 'px';
+      }
+
+      return object;
+   }
+
+   /**
+    * Cleans up allocated resources and effects
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    */
+   function cleanUp(sticky) {
+      resetStyleProperties(
+         sticky.element.style,
+         properties.concat([
+            'marginTop',
+            'marginBottom'
+         ])
+      );
+      sticky.element.style.position = sticky._position;
+
+      if (sticky._placeholder && sticky._placeholder.parentNode) {
+         sticky._placeholder.parentNode.removeChild(sticky._placeholder);
+      }
+   }
+
+   /**
+    * Calculates the boundaries of the sticky element, that is at what
+    * positions it has to start and end to stick.
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    *
+    * @return {Object}
+    */
+   function calculateBoundaries(sticky) {
+      var boundaries = {};
+      var elementStyle = window.getComputedStyle(sticky.element);
+
+      // If the value of the "top" property is defined, in which case it has
+      // a value different from "auto", the element will stick on the top.
+      if (elementStyle.top !== 'auto') {
+         boundaries.start = sticky.element.getBoundingClientRect().top - parseFloat(elementStyle.top);
+         boundaries.end = sticky.element.parentNode.getBoundingClientRect().bottom;
+      } else {
+         boundaries.start = sticky.element.getBoundingClientRect().bottom + parseFloat(elementStyle.bottom);
+         boundaries.end = sticky.element.parentNode.getBoundingClientRect().top;
+      }
+
+      // Normalize the start and the limit position of the element.
+      // This is needed when on the load of a page the position
+      // isn't set at the top of the page.
+      boundaries.start += window.pageYOffset;
+      boundaries.end += window.pageYOffset;
+
+      return boundaries;
+   }
+
+   /**
+    * Returns the function to use as the event handler for
+    * the <code>scroll</code> event
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    *
+    * @return {Function}
+    */
+   function onScroll(sticky) {
+      var isAdded = false;
+      var boundaries = calculateBoundaries(sticky);
+      var elementStyle = window.getComputedStyle(sticky.element);
+      var distanceFromSide = elementStyle.top !== 'auto' ?
+         parseFloat(elementStyle.top) :
+         parseFloat(elementStyle.bottom);
+
+      function startSticky() {
+         sticky._position = sticky.element.style.position;
+         copyStyleProperties(
+            sticky.element.style,
+            {
+               position: 'fixed',
+               marginTop: 0,
+               marginBottom: 0
+            }
+         );
+         copyStyleProperties(sticky.element.style, sticky._placeholder.style, properties);
+         sticky.element.parentNode.insertBefore(sticky._placeholder, sticky.element);
+         isAdded = true;
+         triggerEvent(sticky.element, 'stickystart');
+      }
+
+      function endSticky() {
+         cleanUp(sticky);
+         isAdded = false;
+         triggerEvent(sticky.element, 'stickyend');
+      }
+
+      function stickToTop() {
+         var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
+         var gap = boundaries.end - height - window.pageYOffset;
+         var isInRange = window.pageYOffset >= boundaries.start && window.pageYOffset <= boundaries.end;
+
+         if (isInRange) {
+            if (!isAdded) {
+               startSticky();
+            }
+
+            sticky.element.style.top = gap - distanceFromSide >= 0 ? '' : gap + 'px';
+         } else if (isAdded) {
+            endSticky();
+         }
+      }
+
+      function stickToBottom() {
+         var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
+         var windowBottom = window.pageYOffset + window.innerHeight;
+         var gap = boundaries.end + height - windowBottom;
+         var isInRange = windowBottom <= boundaries.start && windowBottom >= boundaries.end;
+
+         if (isInRange) {
+            if (!isAdded) {
+               startSticky();
+            }
+
+            sticky.element.style.bottom = gap + distanceFromSide <= 0 ? '' : -gap + 'px';
+         } else if (isAdded) {
+            endSticky();
+         }
+      }
+
+      return elementStyle.top !== 'auto' ? stickToTop : stickToBottom;
+   }
+
+   /**
+    * Returns the function to use as the event handler for
+    * the <code>resize</code> event
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    *
+    * @return {Function}
+    */
+   function onResize(sticky) {
+      return function() {
+         window.removeEventListener('resize', sticky._handlers.resize);
+         sticky.destroy();
+         sticky.init();
+         sticky._handlers.scroll();
+      };
+   }
+
+   /**
+    * Binds the events for the sticky object provided
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    */
+   function bindEvents(sticky) {
+      window.addEventListener('load', sticky._handlers.scroll);
+      window.addEventListener('scroll', sticky._handlers.scroll);
+      window.addEventListener('resize', sticky._handlers.resize);
+   }
+
+   /**
+    * Creates a new Sticky object
+    *
+    * @param {HTMLElement} element The element to render as sticky
+    * @param {SettingsHash} [options] An object of options to customize the library
+    *
+    * @constructor
+    */
+   function Sticky(element, options) {
+      this.element = element;
+      this.settings = options || defaults;
+      this._placeholder = null;
+      this._position = '';
+      this._handlers = {};
+   }
+
+   /**
+    * Tests if the <code>sticky</code> value for the <code>position</code>
+    * property is supported
+    *
+    * @return {boolean}
+    */
+   Sticky.isFeatureSupported = function() {
+      var element = document.createElement('div');
+
+      element.style.cssText = 'position:sticky';
+
+      return !!element.style.position;
+   };
+
+   /**
+    * Autoinitializes all the elements of the page matched by the selector provided
+    * in the options or the default one if no selector is provided
+    *
+    * @param {SettingsHash} [options] An object of options to customize the library
+    */
+   Sticky.autoInit = function(options) {
+      options = options || defaults;
+
+      [].forEach.call(
+         document.querySelectorAll(options.selector),
+         function(element) {
+            var sticky = new Sticky(element);
+
+            sticky.init();
+         }
+      );
+   };
+
+   /**
+    * Initializes the library
+    */
+   Sticky.prototype.init = function() {
+      var startPosition = this.element.getBoundingClientRect();
+
+      this._placeholder = document.createElement('div');
+      this._handlers.scroll = onScroll(this);
+      this._handlers.resize = onResize(this);
+
+      this._placeholder.style.zIndex = getZIndex(this.element, this.settings.selector);
+
+      copyStyleProperties(
+         this._placeholder.style,
+         window.getComputedStyle(this.element),
+         [
+            'top',
+            'bottom',
+            'marginTop',
+            'marginBottom',
+            'marginLeft',
+            'marginRight'
+         ]
+      );
+      copyStyleProperties(
+         this._placeholder.style,
+         convertNumbersToPixels(startPosition),
+         [
+            'width',
+            'height',
+            'left'
+         ]
+      );
+
+      bindEvents(this);
+   };
+
+   /**
+    * Removes the effects of the library and clean up all the resources
+    */
+   Sticky.prototype.destroy = function() {
+      cleanUp(this);
+      window.removeEventListener('scroll', this._handlers.scroll);
+      window.removeEventListener('resize', this._handlers.resize);
+      this._handlers = {};
+      this._position = '';
+      this._placeholder = null;
+   };
+
+   return Sticky;
+}));
