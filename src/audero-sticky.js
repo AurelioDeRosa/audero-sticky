@@ -187,7 +187,6 @@
     */
    function onScroll(sticky) {
       var isAdded = false;
-      var boundaries = calculateBoundaries(sticky);
       var elementStyle = window.getComputedStyle(sticky.element);
       var distanceFromSide = elementStyle.top !== 'auto' ?
          parseFloat(elementStyle.top) :
@@ -217,6 +216,7 @@
 
       function stickToTop() {
          var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
+         var boundaries = calculateBoundaries(sticky);
          var gap = boundaries.end - height - window.pageYOffset;
          var isInRange = window.pageYOffset >= boundaries.start && window.pageYOffset <= boundaries.end;
 
@@ -233,6 +233,7 @@
 
       function stickToBottom() {
          var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
+         var boundaries = calculateBoundaries(sticky);
          var windowBottom = window.pageYOffset + window.innerHeight;
          var gap = boundaries.end + height - windowBottom;
          var isInRange = windowBottom <= boundaries.start && windowBottom >= boundaries.end;
