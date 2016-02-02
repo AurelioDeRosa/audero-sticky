@@ -150,22 +150,23 @@
     * Calculates the boundaries of the sticky element, that is at what
     * positions it has to start and end to stick.
     *
-    * @param {Sticky} sticky An instance of a Sticky object
+    * @param {HTMLElement} element The element based on which the boundaries are calculated
     *
     * @return {Object}
     */
-   function calculateBoundaries(sticky) {
+   function calculateBoundaries(element) {
       var boundaries = {};
-      var elementStyle = window.getComputedStyle(sticky.element);
+      var elementStyle = window.getComputedStyle(element);
+      var parentStyle = element.parentNode.getBoundingClientRect();
 
       // If the value of the "top" property is defined, in which case it has
       // a value different from "auto", the element will stick on the top.
       if (elementStyle.top !== 'auto') {
-         boundaries.start = sticky.element.getBoundingClientRect().top - parseFloat(elementStyle.top);
-         boundaries.end = sticky.element.parentNode.getBoundingClientRect().bottom;
+         boundaries.start = element.getBoundingClientRect().top - parseFloat(elementStyle.top);
+         boundaries.end = parentStyle.bottom;
       } else {
-         boundaries.start = sticky.element.getBoundingClientRect().bottom + parseFloat(elementStyle.bottom);
-         boundaries.end = sticky.element.parentNode.getBoundingClientRect().top;
+         boundaries.start = element.getBoundingClientRect().bottom + parseFloat(elementStyle.bottom);
+         boundaries.end = parentStyle.top;
       }
 
       // Normalize the start and the limit position of the element.
@@ -187,6 +188,7 @@
     */
    function onScroll(sticky) {
       var isAdded = false;
+      var boundaries = calculateBoundaries(sticky.element);
       var elementStyle = window.getComputedStyle(sticky.element);
       var distanceFromSide = elementStyle.top !== 'auto' ?
          parseFloat(elementStyle.top) :
@@ -215,8 +217,12 @@
       }
 
       function stickToTop() {
-         var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
-         var boundaries = calculateBoundaries(sticky);
+         // The boundaries are calculated based on the element itself if it's not stickying;
+         // otherwise the placeholder is used.
+         boundaries = isAdded ? calculateBoundaries(sticky._placeholder) : calculateBoundaries(sticky.element);
+
+         // Same as value || 0
+         var height = ~~parseFloat(window.getComputedStyle(sticky.element).height);
          var gap = boundaries.end - height - window.pageYOffset;
          var isInRange = window.pageYOffset >= boundaries.start && window.pageYOffset <= boundaries.end;
 
@@ -232,8 +238,12 @@
       }
 
       function stickToBottom() {
-         var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
-         var boundaries = calculateBoundaries(sticky);
+         // The boundaries are calculated based on the element itself if it's not stickying;
+         // otherwise the placeholder is used.
+         boundaries = isAdded ? calculateBoundaries(sticky._placeholder) : calculateBoundaries(sticky.element);
+
+         // Same as value || 0
+         var height = ~~parseFloat(window.getComputedStyle(sticky.element).height);
          var windowBottom = window.pageYOffset + window.innerHeight;
          var gap = boundaries.end + height - windowBottom;
          var isInRange = windowBottom <= boundaries.start && windowBottom >= boundaries.end;
