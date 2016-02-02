@@ -19,6 +19,8 @@ You can see the library in action by taking a look at the following demos:
 * [Bottom sticky element](http://htmlpreview.github.io/?https://github.com/AurelioDeRosa/audero-sticky/blob/master/demo/bottom-sticky-element.html)
 * [Multiple top sticky elements](http://htmlpreview.github.io/?https://github.com/AurelioDeRosa/audero-sticky/blob/master/demo/top-multiple-sticky-elements.html)
 * [Multiple bottom sticky elements](http://htmlpreview.github.io/?https://github.com/AurelioDeRosa/audero-sticky/blob/master/demo/bottom-multiple-sticky-elements.html)
+* [Top sticky element with the parent changing height after initialization](http://htmlpreview.github.io/?https://github.com/AurelioDeRosa/audero-sticky/blob/master/demo/top-sticky-element-parent-dynamic-height.html)
+* [Bottom sticky element with the parent changing height after initialization](http://htmlpreview.github.io/?https://github.com/AurelioDeRosa/audero-sticky/blob/master/demo/bottom-sticky-element-parent-dynamic-height.html)
 
 ## Compatibility
 
