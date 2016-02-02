@@ -321,7 +321,7 @@
       [].forEach.call(
          document.querySelectorAll(options.selector),
          function(element) {
-            var sticky = new Sticky(element);
+            var sticky = new Sticky(element, options);
 
             sticky.init();
          }
