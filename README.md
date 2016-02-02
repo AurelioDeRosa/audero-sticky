@@ -113,7 +113,7 @@ Sticky.js provides the methods described in the following sections.
 
 Tests if the `sticky` value for the `position` property is supported.
 
-### `Sticky.autoinit([options])`
+### `Sticky.autoInit([options])`
 
 Autoinitializes all the elements of the page having class `sticky` if no options are provided. Otherwise, it 
 initializes the elements matching the selector provided in the [options](#Options) passed.
@@ -195,7 +195,7 @@ provide an object that specifies the selector to use:
 ```js
 if (!Sticky.isFeatureSupported()) {
    Sticky.autoInit({
-      selector: 'fixedsticky'
+      selector: '.fixedsticky'
    });
 }
 ```
