@@ -179,6 +179,38 @@
    }
 
    /**
+    * Updates the style of the placeholder element based on the current
+    * values of the sticky element
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    */
+   function updatePlaceholderStyle(sticky) {
+      var startPosition = sticky.element.getBoundingClientRect();
+
+      copyStyleProperties(
+         sticky._placeholder.style,
+         window.getComputedStyle(sticky.element),
+         [
+            'top',
+            'bottom',
+            'marginTop',
+            'marginBottom',
+            'marginLeft',
+            'marginRight'
+         ]
+      );
+      copyStyleProperties(
+         sticky._placeholder.style,
+         convertNumbersToPixels(startPosition),
+         [
+            'width',
+            'height',
+            'left'
+         ]
+      );
+   }
+
+   /**
     * Returns the function to use as the event handler for
     * the <code>scroll</code> event
     *
@@ -195,6 +227,7 @@
          parseFloat(elementStyle.bottom);
 
       function startSticky() {
+         updatePlaceholderStyle(sticky);
          sticky._position = sticky.element.style.position;
          copyStyleProperties(
             sticky.element.style,
