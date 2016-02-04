@@ -4,7 +4,6 @@
    if (typeof define === 'function' && define.amd) {
       define(factory);
    } else if (typeof module === 'object' && module.exports) {
-
       module.exports = factory();
    } else {
       root.Sticky = factory();
@@ -118,6 +117,32 @@
    }
 
    /**
+    * Calculates the top and bottom margins of the element that has to stick
+    * at the moment it'll stick
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    *
+    * @returns {Object}
+    */
+   function getStickyMargins(sticky) {
+      // Knowing the top and bottom margins at the time the element
+      // will stick is important because the specifications require
+      // to consider these values when calculating the boundaries
+      // in which the element sticks.
+      var elementStyle, stickyMargins;
+
+      addClass(sticky.element, sticky.settings.activeClass);
+      elementStyle = window.getComputedStyle(sticky.element);
+      stickyMargins = {
+         marginBottom: elementStyle.marginBottom,
+         marginTop: elementStyle.marginTop
+      };
+      removeClass(sticky.element, sticky.settings.activeClass);
+
+      return stickyMargins;
+   }
+
+   /**
     * Resets the style of the properties specifies
     *
     * @param {CSSStyleDeclaration} style The object whose properties values are reset
@@ -205,10 +230,12 @@
     * positions it has to start and end to stick.
     *
     * @param {HTMLElement} element The element based on which the boundaries are calculated
+    * @param {Object} stickyMargins An object containing additional margins to consider
+    * in the calculation
     *
     * @return {Object}
     */
-   function calculateBoundaries(element) {
+   function calculateBoundaries(element, stickyMargins) {
       var boundaries = {};
       var elementStyle = window.getComputedStyle(element);
       var parentStyle = element.parentNode.getBoundingClientRect();
@@ -217,10 +244,10 @@
       // a value different from "auto", the element will stick on the top.
       if (elementStyle.top !== 'auto') {
          boundaries.start = element.getBoundingClientRect().top - parseFloat(elementStyle.top);
-         boundaries.end = parentStyle.bottom;
+         boundaries.end = parentStyle.bottom - ~~parseFloat(stickyMargins.marginBottom);
       } else {
          boundaries.start = element.getBoundingClientRect().bottom + parseFloat(elementStyle.bottom);
-         boundaries.end = parentStyle.top;
+         boundaries.end = parentStyle.top + ~~parseFloat(stickyMargins.marginTop);
       }
 
       // Normalize the start and the limit position of the element.
@@ -274,7 +301,8 @@
     */
    function onScroll(sticky) {
       var isAdded = false;
-      var boundaries = calculateBoundaries(sticky.element);
+      var stickyMargins = getStickyMargins(sticky);
+      var boundaries = calculateBoundaries(sticky.element, stickyMargins);
       var elementStyle = window.getComputedStyle(sticky.element);
       var distanceFromSide = elementStyle.top !== 'auto' ?
          parseFloat(elementStyle.top) :
@@ -286,9 +314,7 @@
          copyStyleProperties(
             sticky.element.style,
             {
-               position: 'fixed',
-               marginTop: 0,
-               marginBottom: 0
+               position: 'fixed'
             }
          );
          copyStyleProperties(sticky.element.style, sticky._placeholder.style, properties);
@@ -308,7 +334,9 @@
       function stickToTop() {
          // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
-         boundaries = isAdded ? calculateBoundaries(sticky._placeholder) : calculateBoundaries(sticky.element);
+         boundaries = isAdded ?
+            calculateBoundaries(sticky._placeholder, stickyMargins) :
+            calculateBoundaries(sticky.element, stickyMargins);
 
          // Same as value || 0
          var height = ~~parseFloat(window.getComputedStyle(sticky.element).height);
@@ -329,7 +357,9 @@
       function stickToBottom() {
          // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
-         boundaries = isAdded ? calculateBoundaries(sticky._placeholder) : calculateBoundaries(sticky.element);
+         boundaries = isAdded ?
+            calculateBoundaries(sticky._placeholder, stickyMargins) :
+            calculateBoundaries(sticky.element, stickyMargins);
 
          // Same as value || 0
          var height = ~~parseFloat(window.getComputedStyle(sticky.element).height);
