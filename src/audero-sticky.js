@@ -4,6 +4,7 @@
    if (typeof define === 'function' && define.amd) {
       define(factory);
    } else if (typeof module === 'object' && module.exports) {
+
       module.exports = factory();
    } else {
       root.Sticky = factory();
@@ -16,6 +17,8 @@
     * @type {Object}
     * @property {string} [selector='.sticky'] The selector used to identify the
     * elements processed by this library
+    * @property {string} [activeClass='sticky-active'] The class name added when an
+    * element starts sticking
     */
 
    /**
@@ -24,7 +27,8 @@
     * @type {SettingsHash}
     */
    var defaults = {
-      selector: '.sticky'
+      selector: '.sticky',
+      activeClass: 'sticky--active'
    };
 
    /**
@@ -61,6 +65,56 @@
       }
 
       element.dispatchEvent(customEvent);
+   }
+
+   /**
+    * Merge the settings provided with the default values.
+    * The method does not modify the object provided.
+    *
+    * @param {Object} [settings={}] The settings to merge
+    *
+    * @returns {Object}
+    */
+   function mergeSettings(settings) {
+      var mergedObject = {};
+
+      settings = settings || {};
+
+      for(var property in defaults) {
+         if (!defaults.hasOwnProperty(property)) {
+            continue;
+         }
+
+         mergedObject[property] = settings[property] || defaults[property];
+      }
+
+      return mergedObject;
+   }
+
+   /**
+    * Adds a class name to an element
+    *
+    * @param {HTMLElement} element The element on which the class name is added
+    * @param {string} className The class name to add
+    */
+   function addClass(element, className) {
+      var regex = new RegExp('\\b' + className + '\\b');
+
+      if (!regex.test(element.className)) {
+         element.className += ' ' + className;
+      }
+   }
+
+   /**
+    * Removes a class name from an element
+    *
+    * @param {HTMLElement} element The element on which the class name is removed
+    * @param {string} className The class name to remove
+    */
+   function removeClass(element, className) {
+      var regex = new RegExp('\\b' + className + '\\b');
+
+      element.className = element.className.replace(regex, '').trim();
    }
 
    /**
@@ -241,12 +295,14 @@
          sticky.element.parentNode.insertBefore(sticky._placeholder, sticky.element);
          isAdded = true;
          triggerEvent(sticky.element, 'stickystart');
+         addClass(sticky.element, sticky.settings.activeClass);
       }
 
       function endSticky() {
          cleanUp(sticky);
          isAdded = false;
          triggerEvent(sticky.element, 'stickyend');
+         removeClass(sticky.element, sticky.settings.activeClass);
       }
 
       function stickToTop() {
@@ -333,7 +389,7 @@
     */
    function Sticky(element, options) {
       this.element = element;
-      this.settings = options || defaults;
+      this.settings = mergeSettings(options);
       this._placeholder = null;
       this._position = '';
       this._handlers = {};
