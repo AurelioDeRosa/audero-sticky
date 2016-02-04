@@ -10,7 +10,7 @@ dependencies and support for multiple module systems.
 - **No dependencies**: It's built in raw JavaScript and has no dependencies
 - **Support for top and bottom sticky elements**: The library can be used to stick elements on the top and the bottom
 - **Support multiple module systems**: It can be used with Browserify, RequireJS, and in the browser
-- **Hooks available**: Adds a class name when an element starts sticking
+- **Hooks available**: Triggers events and adds a class name when an element starts and ends sticking
 
 ## Demo
 
@@ -133,6 +133,14 @@ Initializes the library.
 ### `Sticky.prototype.destroy()`
 
 Removes the effects of the library and clean up all the resources
+
+## Events
+
+Audero Sticky triggers a few events on the element(s) that will stick. You can listen to these events to perform custom 
+actions when needed:
+
+* `stickystart`: Triggered when the element starts sticking
+* `stickyend`: Triggered when the element ends sticking
 
 ## Options
 
