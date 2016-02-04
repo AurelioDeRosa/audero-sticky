@@ -306,7 +306,7 @@
       }
 
       function stickToTop() {
-         // The boundaries are calculated based on the element itself if it's not stickying;
+         // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
          boundaries = isAdded ? calculateBoundaries(sticky._placeholder) : calculateBoundaries(sticky.element);
 
@@ -327,7 +327,7 @@
       }
 
       function stickToBottom() {
-         // The boundaries are calculated based on the element itself if it's not stickying;
+         // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
          boundaries = isAdded ? calculateBoundaries(sticky._placeholder) : calculateBoundaries(sticky.element);
 
