@@ -110,7 +110,7 @@ require(['audero-sticky'], function(Sticky) {
 
 ## Methods
 
-Sticky.js provides the methods described in the following sections.
+Audero Sticky provides the methods described in the following sections.
 
 ### `Sticky.isFeatureSupported()`
 
