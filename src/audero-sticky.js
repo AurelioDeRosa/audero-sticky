@@ -508,9 +508,17 @@
     * @return {boolean}
     */
    Sticky.isFeatureSupported = function() {
+      var prefixes = [
+        'ms',
+        'webkit'
+      ];
+      var testStyle = 'position:sticky;';
       var element = document.createElement('div');
 
-      element.style.cssText = 'position:sticky';
+      prefixes.forEach(function(prefix) {
+         testStyle += 'position:-' + prefix + '-sticky;';
+      });
+      element.style.cssText = testStyle;
 
       return !!element.style.position;
    };
