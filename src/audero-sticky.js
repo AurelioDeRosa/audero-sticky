@@ -520,10 +520,10 @@
     * @param {SettingsHash} [options] An object of options to customize the library
     */
    Sticky.autoInit = function(options) {
-      options = options || defaults;
+      var selector = options && options.selector ? options.selector : defaults.selector;
 
       [].forEach.call(
-         document.querySelectorAll(options.selector),
+         document.querySelectorAll(selector),
          function(element) {
             var sticky = new Sticky(element, options);
 
