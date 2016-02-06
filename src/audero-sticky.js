@@ -464,7 +464,7 @@
    Sticky.prototype.init = function() {
       var startPosition = this.element.getBoundingClientRect();
 
-      this._placeholder = document.createElement('div');
+      this._placeholder = document.createElement(this.element.nodeName);
       this._handlers.scroll = onScroll(this);
       this._handlers.resize = onResize(this);
 
