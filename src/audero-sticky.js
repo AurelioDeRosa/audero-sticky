@@ -46,6 +46,66 @@
    ];
 
    /**
+    * The namespace used to store data related to the library
+    * on the elements of a page
+    *
+    * @type {string}
+    */
+   var namespace = 'auderoSticky';
+
+   /**
+    * Gets the value of the required property for a given element.
+    * If <code>property</code> is not provided, an object containing all
+    * the data set is returned.
+    *
+    * @param {HTMLElement} element The element whose value is returned
+    * @param {string} [property] The name of the property whose value is returned
+    *
+    * @returns {*}
+    */
+   function getData(element, property) {
+      return element[namespace] && property ? element[namespace][property] : element[namespace];
+   }
+
+   /**
+    * Sets the value of the required property for a given element.
+    * If <code>property</code> is an object, all its key-value pairs are set.
+    *
+    * @param {HTMLElement} element The element whose value is set
+    * @param {(string|Object)} property The name of the property whose value is set.
+    * If an object is provided, all of its key-value pairs are set.
+    * @param {*} [value] The value to set
+    */
+   function setData(element, property, value) {
+      if (!element[namespace]) {
+         element[namespace] = {};
+      }
+
+      if (typeof property === 'string') {
+         element[namespace][property] = value;
+
+         return;
+      }
+
+      for(var key in property) {
+         if (!property.hasOwnProperty(key)) {
+            continue;
+         }
+
+         element[namespace][key] = property[key];
+      }
+   }
+
+   /**
+    * Removes all the data from a given element
+    *
+    * @param {HTMLElement} element The element whose data are removed
+    */
+   function removeData(element) {
+      delete element[namespace];
+   }
+
+   /**
     * Triggers an event on an element
     *
     * @param {HTMLElement} element The element on which the event is triggered
@@ -211,6 +271,8 @@
     * @param {Sticky} sticky An instance of a Sticky object
     */
    function cleanUp(sticky) {
+      var data = getData(sticky.element);
+
       resetStyleProperties(
          sticky.element.style,
          properties.concat([
@@ -218,10 +280,10 @@
             'marginBottom'
          ])
       );
-      sticky.element.style.position = sticky._position;
+      sticky.element.style.position = data.position;
 
-      if (sticky._placeholder && sticky._placeholder.parentNode) {
-         sticky._placeholder.parentNode.removeChild(sticky._placeholder);
+      if (data.placeholder && data.placeholder.parentNode) {
+         data.placeholder.parentNode.removeChild(data.placeholder);
       }
    }
 
@@ -267,9 +329,10 @@
     */
    function updatePlaceholderStyle(sticky) {
       var startPosition = sticky.element.getBoundingClientRect();
+      var placeholder = getData(sticky.element, 'placeholder');
 
       copyStyleProperties(
-         sticky._placeholder.style,
+         placeholder.style,
          window.getComputedStyle(sticky.element),
          [
             'top',
@@ -281,7 +344,7 @@
          ]
       );
       copyStyleProperties(
-         sticky._placeholder.style,
+         placeholder.style,
          convertNumbersToPixels(startPosition),
          [
             'width',
@@ -304,21 +367,22 @@
       var stickyMargins = getStickyMargins(sticky);
       var boundaries = calculateBoundaries(sticky.element, stickyMargins);
       var elementStyle = window.getComputedStyle(sticky.element);
+      var data = getData(sticky.element);
       var distanceFromSide = elementStyle.top !== 'auto' ?
          parseFloat(elementStyle.top) :
          parseFloat(elementStyle.bottom);
 
       function startSticky() {
          updatePlaceholderStyle(sticky);
-         sticky._position = sticky.element.style.position;
+         setData(sticky.element, 'position', sticky.element.style.position);
          copyStyleProperties(
             sticky.element.style,
             {
                position: 'fixed'
             }
          );
-         copyStyleProperties(sticky.element.style, sticky._placeholder.style, properties);
-         sticky.element.parentNode.insertBefore(sticky._placeholder, sticky.element);
+         copyStyleProperties(sticky.element.style, data.placeholder.style, properties);
+         sticky.element.parentNode.insertBefore(data.placeholder, sticky.element);
          isAdded = true;
          triggerEvent(sticky.element, 'stickystart');
          addClass(sticky.element, sticky.settings.activeClass);
@@ -335,7 +399,7 @@
          // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
          boundaries = isAdded ?
-            calculateBoundaries(sticky._placeholder, stickyMargins) :
+            calculateBoundaries(data.placeholder, stickyMargins) :
             calculateBoundaries(sticky.element, stickyMargins);
 
          // Same as value || 0
@@ -358,7 +422,7 @@
          // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
          boundaries = isAdded ?
-            calculateBoundaries(sticky._placeholder, stickyMargins) :
+            calculateBoundaries(data.placeholder, stickyMargins) :
             calculateBoundaries(sticky.element, stickyMargins);
 
          // Same as value || 0
@@ -391,10 +455,12 @@
     */
    function onResize(sticky) {
       return function() {
-         window.removeEventListener('resize', sticky._handlers.resize);
+         var handlers = getData(sticky.element, 'handlers');
+
+         window.removeEventListener('resize', handlers.resize);
          sticky.destroy();
          sticky.init();
-         sticky._handlers.scroll();
+         handlers.scroll();
       };
    }
 
@@ -404,9 +470,11 @@
     * @param {Sticky} sticky An instance of a Sticky object
     */
    function bindEvents(sticky) {
-      window.addEventListener('load', sticky._handlers.scroll);
-      window.addEventListener('scroll', sticky._handlers.scroll);
-      window.addEventListener('resize', sticky._handlers.resize);
+      var handlers = getData(sticky.element, 'handlers');
+
+      window.addEventListener('load', handlers.scroll);
+      window.addEventListener('scroll', handlers.scroll);
+      window.addEventListener('resize', handlers.resize);
    }
 
    /**
@@ -420,9 +488,15 @@
    function Sticky(element, options) {
       this.element = element;
       this.settings = mergeSettings(options);
-      this._placeholder = null;
-      this._position = '';
-      this._handlers = {};
+
+      setData(
+         this.element,
+         {
+            handlers: {},
+            placeholder: null,
+            position: ''
+         }
+      );
    }
 
    /**
@@ -463,13 +537,21 @@
     */
    Sticky.prototype.init = function() {
       var startPosition = this.element.getBoundingClientRect();
+      var placeholder = document.createElement(this.element.nodeName);
 
-      this._placeholder = document.createElement(this.element.nodeName);
-      this._handlers.scroll = onScroll(this);
-      this._handlers.resize = onResize(this);
+      setData(
+         this.element,
+         {
+            handlers: {
+               scroll: onScroll(this),
+               resize: onResize(this)
+            },
+            placeholder: placeholder
+         }
+      );
 
       copyStyleProperties(
-         this._placeholder.style,
+         placeholder.style,
          {
             visibility: 'hidden',
             zIndex: getZIndex(this.element, this.settings.selector)
@@ -477,7 +559,7 @@
       );
 
       copyStyleProperties(
-         this._placeholder.style,
+         placeholder.style,
          window.getComputedStyle(this.element),
          [
             'top',
@@ -489,7 +571,7 @@
          ]
       );
       copyStyleProperties(
-         this._placeholder.style,
+         placeholder.style,
          convertNumbersToPixels(startPosition),
          [
             'width',
@@ -505,12 +587,13 @@
     * Removes the effects of the library and clean up all the resources
     */
    Sticky.prototype.destroy = function() {
+      var handlers = getData(this.element, 'handlers');
+
       cleanUp(this);
-      window.removeEventListener('scroll', this._handlers.scroll);
-      window.removeEventListener('resize', this._handlers.resize);
-      this._handlers = {};
-      this._position = '';
-      this._placeholder = null;
+      window.removeEventListener('scroll', handlers.scroll);
+      window.removeEventListener('resize', handlers.resize);
+
+      removeData(this.element);
    };
 
    return Sticky;
