@@ -468,7 +468,13 @@
       this._handlers.scroll = onScroll(this);
       this._handlers.resize = onResize(this);
 
-      this._placeholder.style.zIndex = getZIndex(this.element, this.settings.selector);
+      copyStyleProperties(
+         this._placeholder.style,
+         {
+            visibility: 'hidden',
+            zIndex: getZIndex(this.element, this.settings.selector)
+         }
+      );
 
       copyStyleProperties(
          this._placeholder.style,
