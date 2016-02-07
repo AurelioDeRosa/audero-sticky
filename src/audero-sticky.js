@@ -536,7 +536,6 @@
     * Initializes the library
     */
    Sticky.prototype.init = function() {
-      var startPosition = this.element.getBoundingClientRect();
       var placeholder = document.createElement(this.element.nodeName);
 
       setData(
@@ -558,28 +557,7 @@
          }
       );
 
-      copyStyleProperties(
-         placeholder.style,
-         window.getComputedStyle(this.element),
-         [
-            'top',
-            'bottom',
-            'marginTop',
-            'marginBottom',
-            'marginLeft',
-            'marginRight'
-         ]
-      );
-      copyStyleProperties(
-         placeholder.style,
-         convertNumbersToPixels(startPosition),
-         [
-            'width',
-            'height',
-            'left'
-         ]
-      );
-
+      updatePlaceholderStyle(this);
       bindEvents(this);
    };
 
