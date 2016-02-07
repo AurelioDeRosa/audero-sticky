@@ -363,7 +363,6 @@
     * @return {Function}
     */
    function onScroll(sticky) {
-      var isAdded = false;
       var stickyMargins = getStickyMargins(sticky);
       var boundaries = calculateBoundaries(sticky.element, stickyMargins);
       var elementStyle = window.getComputedStyle(sticky.element);
@@ -383,19 +382,19 @@
          );
          copyStyleProperties(sticky.element.style, data.placeholder.style, properties);
          sticky.element.parentNode.insertBefore(data.placeholder, sticky.element);
-         isAdded = true;
          triggerEvent(sticky.element, 'stickystart');
          addClass(sticky.element, sticky.settings.activeClass);
       }
 
       function endSticky() {
          cleanUp(sticky);
-         isAdded = false;
          triggerEvent(sticky.element, 'stickyend');
          removeClass(sticky.element, sticky.settings.activeClass);
       }
 
       function stickToTop() {
+         var isAdded = data.placeholder.parentNode;
+
          // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
          boundaries = isAdded ?
@@ -419,6 +418,8 @@
       }
 
       function stickToBottom() {
+         var isAdded = data.placeholder.parentNode;
+
          // The boundaries are calculated based on the element itself if it's not sticking;
          // otherwise the placeholder is used.
          boundaries = isAdded ?
