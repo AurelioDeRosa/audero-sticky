@@ -488,15 +488,6 @@
    function Sticky(element, options) {
       this.element = element;
       this.settings = mergeSettings(options);
-
-      setData(
-         this.element,
-         {
-            handlers: {},
-            placeholder: null,
-            position: ''
-         }
-      );
    }
 
    /**
@@ -536,16 +527,19 @@
     * Initializes the library
     */
    Sticky.prototype.init = function() {
+      if (getData(this.element)) {
+         throw new Error('This element has already been initialized');
+      }
+
       var placeholder = document.createElement(this.element.nodeName);
 
+      setData(this.element, 'placeholder', placeholder);
       setData(
          this.element,
+         'handlers',
          {
-            handlers: {
-               scroll: onScroll(this),
-               resize: onResize(this)
-            },
-            placeholder: placeholder
+            scroll: onScroll(this),
+            resize: onResize(this)
          }
       );
 
