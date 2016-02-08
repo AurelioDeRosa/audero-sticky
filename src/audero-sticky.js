@@ -458,7 +458,6 @@
       return function() {
          var handlers = getData(sticky.element, 'handlers');
 
-         window.removeEventListener('resize', handlers.resize);
          sticky.destroy();
          sticky.init();
          handlers.scroll();
