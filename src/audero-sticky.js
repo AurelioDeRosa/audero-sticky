@@ -478,6 +478,18 @@
    }
 
    /**
+    * Unbinds the events for the sticky object provided
+    *
+    * @param {Sticky} sticky An instance of a Sticky object
+    */
+   function unbindEvents(sticky) {
+      var handlers = getData(sticky.element, 'handlers');
+
+      window.removeEventListener('scroll', handlers.scroll);
+      window.removeEventListener('resize', handlers.resize);
+   }
+
+   /**
     * Creates a new Sticky object
     *
     * @param {HTMLElement} element The element to render as sticky
@@ -559,12 +571,8 @@
     * Removes the effects of the library and clean up all the resources
     */
    Sticky.prototype.destroy = function() {
-      var handlers = getData(this.element, 'handlers');
-
       cleanUp(this);
-      window.removeEventListener('scroll', handlers.scroll);
-      window.removeEventListener('resize', handlers.resize);
-
+      unbindEvents(this);
       removeData(this.element);
    };
 
