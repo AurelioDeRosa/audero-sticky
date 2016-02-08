@@ -485,6 +485,7 @@
    function unbindEvents(sticky) {
       var handlers = getData(sticky.element, 'handlers');
 
+      window.removeEventListener('load', handlers.scroll);
       window.removeEventListener('scroll', handlers.scroll);
       window.removeEventListener('resize', handlers.resize);
    }
