@@ -456,11 +456,9 @@
     */
    function onResize(sticky) {
       return function() {
-         var handlers = getData(sticky.element, 'handlers');
-
          sticky.destroy();
          sticky.init();
-         handlers.scroll();
+         getData(sticky.element, 'handlers').scroll();
       };
    }
 
