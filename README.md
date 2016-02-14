@@ -1,5 +1,7 @@
 # Audero Sticky
 
+[![Code Climate](https://codeclimate.com/github/AurelioDeRosa/audero-sticky/badges/gpa.svg)](https://codeclimate.com/github/AurelioDeRosa/audero-sticky)
+
 [Audero Sticky](https://github.com/AurelioDeRosa/audero-sticky) is a polyfill for the CSS `position: sticky` with no 
 dependencies and support for multiple module systems.
 
