@@ -4,6 +4,7 @@
    if (typeof define === 'function' && define.amd) {
       define(factory);
    } else if (typeof module === 'object' && module.exports) {
+
       module.exports = factory();
    } else {
       root.Sticky = factory();
@@ -508,9 +509,17 @@
     * @return {boolean}
     */
    Sticky.isFeatureSupported = function() {
+      var prefixes = [
+        'ms',
+        'webkit'
+      ];
+      var testStyle = 'position:sticky;';
       var element = document.createElement('div');
 
-      element.style.cssText = 'position:sticky';
+      prefixes.forEach(function(prefix) {
+         testStyle += 'position:-' + prefix + '-sticky;';
+      });
+      element.style.cssText = testStyle;
 
       return !!element.style.position;
    };
