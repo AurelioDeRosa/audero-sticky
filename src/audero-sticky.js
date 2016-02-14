@@ -510,9 +510,7 @@
     */
    Sticky.isFeatureSupported = function() {
       var prefixes = [
-        'moz',
         'ms',
-        'o',
         'webkit'
       ];
       var testStyle = 'position:sticky;';
