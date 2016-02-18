@@ -306,10 +306,10 @@
       // a value different from "auto", the element will stick on the top.
       if (elementStyle.top !== 'auto') {
          boundaries.start = element.getBoundingClientRect().top - parseFloat(elementStyle.top);
-         boundaries.end = parentStyle.bottom - ~~parseFloat(stickyMargins.marginBottom);
+         boundaries.end = parentStyle.bottom - (parseFloat(stickyMargins.marginBottom) || 0);
       } else {
          boundaries.start = element.getBoundingClientRect().bottom + parseFloat(elementStyle.bottom);
-         boundaries.end = parentStyle.top + ~~parseFloat(stickyMargins.marginTop);
+         boundaries.end = parentStyle.top + (parseFloat(stickyMargins.marginTop) || 0);
       }
 
       // Normalize the start and the limit position of the element.
@@ -401,8 +401,7 @@
             calculateBoundaries(data.placeholder, stickyMargins) :
             calculateBoundaries(sticky.element, stickyMargins);
 
-         // Same as value || 0
-         var height = ~~parseFloat(window.getComputedStyle(sticky.element).height);
+         var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
          var gap = boundaries.end - height - window.pageYOffset;
          var isInRange = window.pageYOffset >= boundaries.start && window.pageYOffset <= boundaries.end;
 
@@ -426,8 +425,7 @@
             calculateBoundaries(data.placeholder, stickyMargins) :
             calculateBoundaries(sticky.element, stickyMargins);
 
-         // Same as value || 0
-         var height = ~~parseFloat(window.getComputedStyle(sticky.element).height);
+         var height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
          var windowBottom = window.pageYOffset + window.innerHeight;
          var gap = boundaries.end + height - windowBottom;
          var isInRange = windowBottom <= boundaries.start && windowBottom >= boundaries.end;
