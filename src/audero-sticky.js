@@ -4,7 +4,6 @@
    if (typeof define === 'function' && define.amd) {
       define(factory);
    } else if (typeof module === 'object' && module.exports) {
-
       module.exports = factory();
    } else {
       root.Sticky = factory();
@@ -600,6 +599,10 @@
 
       updatePlaceholderStyle(this);
       bindEvents(this);
+
+      // Execute the scroll handler to position the element if it
+      // should stick when the page is loaded
+      getData(this.element, 'handlers').scroll();
    };
 
    /**
