@@ -4,6 +4,7 @@
    if (typeof define === 'function' && define.amd) {
       define(factory);
    } else if (typeof module === 'object' && module.exports) {
+
       module.exports = factory();
    } else {
       root.Sticky = factory();
@@ -233,7 +234,30 @@
    }
 
    /**
-    * Calculates the z-index value of an element based
+    * Returns the z-index value of the element if one is defined;
+    * <code>undefined</code> otherwise
+    *
+    * @param {HTMLElement} element The element whose z-index value must be calculated
+    *
+    * @return {number|undefined}
+    */
+   function getComputedZIndex(element) {
+      var position = element.style.position;
+
+      // Set the position to relative to address a bug in WebKit browsers (issue #15562)
+      // https://bugs.webkit.org/show_bug.cgi?id=15562
+      element.style.position = 'relative';
+
+      var zIndex = Number(window.getComputedStyle(element).zIndex);
+
+      element.style.position = position;
+
+      return !isNaN(zIndex) ? zIndex : undefined;
+   }
+
+   /**
+    * Returns the z-index value of the element if one is defined.
+    * Otherwise, it calculates the z-index value of an element based
     * on its position in the DOM, among other elements selected
     * by the CSS selector provided
     *
@@ -243,6 +267,12 @@
     * @return {number}
     */
    function getZIndex(element, selector) {
+      var zIndex = getComputedZIndex(element);
+
+      if (zIndex !== undefined) {
+         return zIndex;
+      }
+
       var stickyElements = [].slice.call(document.querySelectorAll(selector));
 
       return stickyElements.indexOf(element) + 1;
