@@ -31,6 +31,15 @@
    };
 
    /**
+    * The settings to use when adding the event handler for the scroll event
+    *
+    * @type {Object}
+    */
+   var scrollOptions = {
+      passive: true
+   };
+
+   /**
     * The properties needed by the placeholder element to have the
     * occupy the same space as the element when in its original position
     *
@@ -517,9 +526,6 @@
     */
    function bindEvents(sticky) {
       var handlers = getData(sticky.element, 'handlers');
-      var scrollOptions = {
-         passive: true
-      };
 
       window.addEventListener('load', handlers.scroll);
       window.addEventListener('scroll', handlers.scroll, isPassiveEventListenerSupported() ? scrollOptions : false);
@@ -535,7 +541,7 @@
       var handlers = getData(sticky.element, 'handlers');
 
       window.removeEventListener('load', handlers.scroll);
-      window.removeEventListener('scroll', handlers.scroll);
+      window.removeEventListener('scroll', handlers.scroll, isPassiveEventListenerSupported() ? scrollOptions : false);
       window.removeEventListener('resize', handlers.resize);
    }
 
