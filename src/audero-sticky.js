@@ -68,6 +68,27 @@
    }
 
    /**
+    * Tests if passive event listeners are supported
+    *
+    * @return {boolean}
+    */
+   function isPassiveEventListenerSupported() {
+      var isSupported = false;
+
+      try {
+         var options = Object.defineProperty({}, 'passive', {
+            get: function() {
+               isSupported = true;
+            }
+         });
+
+         window.addEventListener('', null, options);
+      } catch(ex) {}
+
+      return isSupported;
+   }
+
+   /**
     * Sets the value of the required property for a given element.
     * If <code>property</code> is an object, all its key-value pairs are set.
     *
@@ -496,9 +517,12 @@
     */
    function bindEvents(sticky) {
       var handlers = getData(sticky.element, 'handlers');
+      var scrollOptions = {
+         passive: true
+      };
 
       window.addEventListener('load', handlers.scroll);
-      window.addEventListener('scroll', handlers.scroll);
+      window.addEventListener('scroll', handlers.scroll, isPassiveEventListenerSupported() ? scrollOptions : false);
       window.addEventListener('resize', handlers.resize);
    }
 
