@@ -336,7 +336,9 @@
          sticky.element.style,
          properties.concat([
             'marginTop',
-            'marginBottom'
+            'marginBottom',
+            'top',
+            'bottom'
          ])
       );
       sticky.element.style.position = data.position;
