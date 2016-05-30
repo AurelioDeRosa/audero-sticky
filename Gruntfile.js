@@ -13,36 +13,58 @@ module.exports = function (grunt) {
       pkg: grunt.file.readJSON('package.json'),
       config: config,
 
-      uglify: {
+      clean: {
+         dist: [
+            '<%= config.dist %>/**'
+         ]
+      },
+
+      browserify: {
          options: {
-            banner: '/*! audero-sticky.js <%= pkg.version %> | Aurelio De Rosa (@AurelioDeRosa) | MIT/GPL-3.0 Licensed */',
-            sourceMap: true,
-            screwIE8: true
+            banner: '/*! <%= pkg.name %>.js <%= pkg.version %> | Aurelio De Rosa (@AurelioDeRosa) | MIT/GPL-3.0 Licensed */',
+            browserifyOptions: {
+               debug: true,
+               standalone: 'Sticky'
+            },
+            plugin: [
+               ['minifyify', {
+                  map: '<%= pkg.name %>.min.js.map',
+                  output: '<%= config.dist %>/<%= pkg.name %>.min.js.map'
+               }]
+            ],
+            transform: [
+               ['babelify', {
+                  plugins: [
+                     'add-module-exports',
+                     'transform-object-assign'
+                  ]
+               }]
+            ]
          },
          dist: {
             files: {
-               '<%= config.dist %>/audero-sticky.min.js': ['<%= config.src %>/audero-sticky.js']
+               '<%= config.dist %>/<%= pkg.name %>.min.js': '<%= config.src %>/<%= pkg.name %>.js'
             }
          }
       },
+
       jscs: {
          options: {
             config: '.jscsrc',
             fix: true
          },
-         dist: '<%= jshint.src %>'
+         src: [
+            '<%= config.src %>/**/*.js'
+         ]
       },
 
       jshint: {
          options: {
             jshintrc: '.jshintrc',
-            reporter: require('jshint-stylish'),
-            // force property set to true to workaround jshint issue #1368:
-            // https://github.com/jshint/jshint/issues/1368
-            force: true
+            reporter: require('jshint-stylish')
          },
          src: [
-            'src/*.js'
+            '<%= config.src %>/**/*.js'
          ]
       },
 
@@ -55,7 +77,7 @@ module.exports = function (grunt) {
                }
             }
          },
-         files: ['dist/*.js']
+         files: ['<%= config.dist %>/*.js']
       }
    });
 
@@ -65,11 +87,12 @@ module.exports = function (grunt) {
    ]);
 
    grunt.registerTask('build', [
-      'uglify',
+      'browserify',
       'compare_size'
    ]);
 
    grunt.registerTask('default', [
+      'clean',
       'lint',
       'build'
    ]);
