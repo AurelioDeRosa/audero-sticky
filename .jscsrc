@@ -41,9 +41,7 @@
    "disallowYodaConditions": true,
    "maximumLineLength": 120,
    "requireBlocksOnNewline": true,
-   "requireCamelCaseOrUpperCaseIdentifiers": {
-      "ignoreProperties": true
-   },
+   "requireCamelCaseOrUpperCaseIdentifiers": true,
    "requireCapitalizedComments": {
       "allExcept": [
          "exported",
