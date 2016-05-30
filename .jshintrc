@@ -1,16 +1,17 @@
 {
-   "bitwise": false,
+   "bitwise": true,
    "curly": true,
    "eqeqeq": true,
+   "esversion": 6,
    "forin": false,
    "freeze": true,
    "funcscope": false,
-   "futurehostile": true,
-   "globalstrict": true,
+   "globals": [],
    "iterator": false,
    "latedef": true,
    "maxcomplexity": 6,
    "maxdepth": 3,
+   "maxerr": 50,
    "maxparams": 4,
    "maxstatements": 15,
    "noarg": true,
@@ -18,15 +19,13 @@
    "nonbsp": true,
    "nonew": true,
    "notypeof": true,
-   "shadow": true,
+   "predef": [],
+   "shadow": "inner",
    "singleGroups": true,
+   "strict": "implied",
    "undef": true,
    "unused": true,
+   "varstmt": false,
 
-   "esnext": false,
-   "strict": true,
-
-   "browser": true,
-   "node": true,
-   "dojo": true
+   "browser": true
 }
