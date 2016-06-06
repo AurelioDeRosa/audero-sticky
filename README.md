@@ -62,14 +62,15 @@ First of all, you have to ensure that your CSS is using the `border-box` model. 
 
 Add a class to your CSS, for example `sticky`, to specify the position your element(s) should have when in sticky 
 mode. The library supports any `top` and `bottom` value. While not mandatory for the library, I strongly suggest to
-add the `position: sticky` declaration too. This will allow you to use the library only in browsers that don't 
-support this feature.
+add the `position: sticky` declaration and the relevant vendor prefixes. This will allow you to use the library only
+in browsers that don't support this feature.
 
 An example is the following:
  
 ```css
 .sticky
 {
+   position: -webkit-sticky;
    position: sticky;
    top: 0;
 }
