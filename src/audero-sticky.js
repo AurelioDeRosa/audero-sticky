@@ -1,4 +1,5 @@
 import 'classlist-polyfill';
+import 'window.requestanimationframe';
 import EventEmitter from './helpers/event-emitter';
 import Store from './helpers/store';
 import Style from './helpers/style';
@@ -20,15 +21,6 @@ import Style from './helpers/style';
 const defaults = {
    selector: '.sticky',
    activeClass: 'sticky--active'
-};
-
-/**
- * The settings to use when adding the event handler for the scroll event
- *
- * @type {Object}
- */
-const scrollOptions = {
-   passive: true
 };
 
 /**
@@ -62,11 +54,11 @@ const namespace = 'auderosticky';
 const store = new Store(namespace);
 
 /**
- * Tests if passive event listeners are supported
+ * Returns scrollOptions if passive event listeners are supported or false
  *
- * @return {boolean}
+ * @return {object|boolean}
  */
-function isPassiveEventListenerSupported() {
+function getScrollOptions() {
    let isSupported = false;
 
    try {
@@ -79,7 +71,9 @@ function isPassiveEventListenerSupported() {
       window.addEventListener('', null, options);
    } catch(ex) {}
 
-   return isSupported;
+   return isSupported ? {
+      passive: true
+   } : false;
 }
 
 /**
@@ -385,8 +379,8 @@ function bindEvents(sticky) {
    const handlers = store.getData(sticky.element, 'handlers');
 
    window.addEventListener('load', handlers.scroll);
-   window.addEventListener('scroll', handlers.scroll, isPassiveEventListenerSupported() ? scrollOptions : false);
-   window.addEventListener('resize', handlers.resize);
+   window.addEventListener('scroll', window.requestAnimationFrame(handlers.scroll), getScrollOptions());
+   window.addEventListener('resize', window.requestAnimationFrame(handlers.resize));
 }
 
 /**
@@ -398,7 +392,7 @@ function unbindEvents(sticky) {
    const handlers = store.getData(sticky.element, 'handlers');
 
    window.removeEventListener('load', handlers.scroll);
-   window.removeEventListener('scroll', handlers.scroll, isPassiveEventListenerSupported() ? scrollOptions : false);
+   window.removeEventListener('scroll', handlers.scroll, getScrollOptions());
    window.removeEventListener('resize', handlers.resize);
 }
 
@@ -481,7 +475,8 @@ export
          placeholder.style,
          {
             visibility: 'hidden',
-            zIndex: getZIndex(this.element, this.settings.selector)
+            zIndex: getZIndex(this.element, this.settings.selector),
+            display: 'block'
          }
       );
 
