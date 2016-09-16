@@ -475,7 +475,8 @@ export
          placeholder.style,
          {
             visibility: 'hidden',
-            zIndex: getZIndex(this.element, this.settings.selector)
+            zIndex: getZIndex(this.element, this.settings.selector),
+            display: 'block'
          }
       );
 
