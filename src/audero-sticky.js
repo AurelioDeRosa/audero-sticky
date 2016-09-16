@@ -309,46 +309,50 @@ function onScroll(sticky) {
    }
 
    function stickToTop() {
-      const isAdded = !!store
-         .getData(sticky.element)
-         .placeholder
-         .parentNode;
-      const boundaries = getBoundaries(isAdded);
-      const height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
-      const gap = boundaries.end - height - window.pageYOffset;
-      const isInRange = window.pageYOffset >= boundaries.start && window.pageYOffset <= boundaries.end;
+      window.requestAnimationFrame(() => {
+         const isAdded = !!store
+            .getData(sticky.element)
+            .placeholder
+            .parentNode;
+         const boundaries = getBoundaries(isAdded);
+         const height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
+         const gap = boundaries.end - height - window.pageYOffset;
+         const isInRange = window.pageYOffset >= boundaries.start && window.pageYOffset <= boundaries.end;
 
-      if (isInRange) {
-         if (!isAdded) {
-            startSticky();
+         if (isInRange) {
+            if (!isAdded) {
+               startSticky();
+            }
+
+            sticky.element.style.top = gap - distanceFromSide >= 0 ? '' : `${gap}px`;
+         } else if (isAdded) {
+            endSticky();
          }
-
-         sticky.element.style.top = gap - distanceFromSide >= 0 ? '' : `${gap}px`;
-      } else if (isAdded) {
-         endSticky();
-      }
+      });
    }
 
    function stickToBottom() {
-      const isAdded = !!store
-         .getData(sticky.element)
-         .placeholder
-         .parentNode;
-      const boundaries = getBoundaries(isAdded);
-      const height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
-      const windowBottom = window.pageYOffset + window.innerHeight;
-      const gap = boundaries.end + height - windowBottom;
-      const isInRange = windowBottom <= boundaries.start && windowBottom >= boundaries.end;
+      window.requestAnimationFrame(() => {
+         const isAdded = !!store
+            .getData(sticky.element)
+            .placeholder
+            .parentNode;
+         const boundaries = getBoundaries(isAdded);
+         const height = parseFloat(window.getComputedStyle(sticky.element).height) || 0;
+         const windowBottom = window.pageYOffset + window.innerHeight;
+         const gap = boundaries.end + height - windowBottom;
+         const isInRange = windowBottom <= boundaries.start && windowBottom >= boundaries.end;
 
-      if (isInRange) {
-         if (!isAdded) {
-            startSticky();
+         if (isInRange) {
+            if (!isAdded) {
+               startSticky();
+            }
+
+            sticky.element.style.bottom = gap + distanceFromSide <= 0 ? '' : `${-gap}px`;
+         } else if (isAdded) {
+            endSticky();
          }
-
-         sticky.element.style.bottom = gap + distanceFromSide <= 0 ? '' : `${-gap}px`;
-      } else if (isAdded) {
-         endSticky();
-      }
+      });
    }
 
    return elementStyle.top !== 'auto' ? stickToTop : stickToBottom;
@@ -379,8 +383,8 @@ function bindEvents(sticky) {
    const handlers = store.getData(sticky.element, 'handlers');
 
    window.addEventListener('load', handlers.scroll);
-   window.addEventListener('scroll', window.requestAnimationFrame(handlers.scroll), getScrollOptions());
-   window.addEventListener('resize', window.requestAnimationFrame(handlers.resize));
+   window.addEventListener('scroll', handlers.scroll, getScrollOptions());
+   window.addEventListener('resize', handlers.resize);
 }
 
 /**
